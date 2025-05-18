@@ -9,6 +9,8 @@
             --primary: #6C5CE7;
             --secondary: #48D1CC;
             --accent: #FF6B6B;
+            --dark: #0f0c29;
+            --glass: rgba(255,255,255,0.05);
         }
 
         * {
@@ -18,7 +20,7 @@
         }
 
         body {
-            background: linear-gradient(135deg, #0f0c29 30%, #302b63 100%);
+            background: linear-gradient(135deg, var(--dark) 30%, #302b63 100%);
             color: white;
             line-height: 1.6;
         }
@@ -35,23 +37,52 @@
             100% { box-shadow: 0 0 10px var(--primary); }
         }
 
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes grow {
+            from { height: 0; opacity: 0; }
+            to { height: var(--height); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         /* 导航栏优化 */
         .nav {
             position: fixed;
             width: 100%;
             padding: 1rem 5%;
-            background: rgb(15, 12, 41);
+            background: rgba(15, 12, 41, 0.8);
             backdrop-filter: blur(15px);
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 1000;
+            transition: background 0.3s ease;
+        }
+
+        .nav.scrolled {
+            background: rgba(15, 12, 41, 0.95);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
         .nav h2 {
             background: linear-gradient(45deg, var(--secondary), var(--primary));
             -webkit-background-clip: text;
             color: transparent;
+            font-size: 1.8rem;
         }
 
         /* 新增对话按钮 */
@@ -66,6 +97,7 @@
             align-items: center;
             gap: 8px;
             transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 5px 15px rgba(108,92,231,0.2);
         }
 
         .chat-btn:hover {
@@ -84,16 +116,18 @@
         }
 
         .tech-card {
-            background: rgba(255,255,255,0.05);
+            background: var(--glass);
             padding: 2rem;
             border-radius: 15px;
             transition: transform 0.3s, box-shadow 0.3s;
             backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
         .tech-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 1px solid rgba(72, 209, 204, 0.3);
         }
 
         /* 游戏化区块优化 */
@@ -116,6 +150,7 @@
             font-size: 1.2rem;
             text-align: center;
             padding: 10px;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
         }
 
         /* 响应式调整 */
@@ -143,13 +178,24 @@
                 height: 90px;
                 font-size: 1rem;
             }
-        }
-
-        /* 新增英雄区动画 */
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-            100% { transform: translateY(0px); }
+            
+            .path-container {
+                flex-direction: column;
+                height: auto;
+                gap: 3rem;
+            }
+            
+            .path-node {
+                left: 0 !important;
+            }
+            
+            .path-connector {
+                display: none;
+            }
+            
+            .cognitive-chart {
+                transform: scale(0.8);
+            }
         }
 
         .hero-section {
@@ -174,6 +220,207 @@
             );
             border-radius: 15px;
             margin: 2rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* 学习资源卡片样式 */
+        .resource-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem;
+            border-radius: 15px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(108,92,231,0.3);
+            border: 1px solid rgba(72, 209, 204, 0.3);
+        }
+
+        .resource-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+
+        .resource-link {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 1rem 0;
+            display: block;
+            transition: color 0.3s;
+        }
+
+        .resource-link:hover {
+            text-decoration: underline;
+            color: var(--secondary);
+        }
+
+        /* 认知引擎图表样式 */
+        .cognitive-chart {
+            height: 300px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            padding: 0 20px;
+            margin: 2rem 0;
+        }
+
+        .chart-bar {
+            width: 35px;
+            background: linear-gradient(to top, var(--primary), var(--secondary));
+            border-radius: 5px 5px 0 0;
+            position: relative;
+            animation: grow 1.5s ease-out forwards;
+            box-shadow: 0 0 15px rgba(72, 209, 204, 0.3);
+        }
+
+        .chart-label {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .chart-value {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--secondary);
+        }
+
+        /* 路径规划样式 */
+        .path-node {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: rgba(72, 209, 204, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border: 2px solid var(--secondary);
+            position: relative;
+            backdrop-filter: blur(5px);
+            animation: pulse 3s infinite;
+            transition: all 0.3s;
+        }
+
+        .path-node:hover {
+            transform: scale(1.1);
+            background: rgba(72, 209, 204, 0.2);
+        }
+
+        .path-connector {
+            height: 3px;
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: -1;
+            border-radius: 2px;
+        }
+
+        .path-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            height: 350px;
+            margin: 2rem 0;
+        }
+
+        .node-icon {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: var(--secondary);
+        }
+
+        /* 进度指示器 */
+        .progress-indicator {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 4px;
+            animation: progressGrow 2s ease-out forwards;
+        }
+
+        @keyframes progressGrow {
+            from { width: 0; }
+            to { width: var(--width); }
+        }
+
+        /* 知识点卡片 */
+        .knowledge-card {
+            background: var(--glass);
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+        }
+
+        .knowledge-card:hover {
+            border: 1px solid rgba(72, 209, 204, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-title {
+            font-weight: bold;
+            color: var(--secondary);
+        }
+
+        .card-badge {
+            background: rgba(72, 209, 204, 0.2);
+            color: var(--secondary);
+            padding: 0.3rem 0.7rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+
+        /* 动画触发类 */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
@@ -194,55 +441,230 @@
                 <span style="display: block; color: var(--secondary);">重新定义</span>
                 学习体验
             </h1>
-            <div class="cyber-border" style="padding: 1.5rem 3rem; margin: 0 auto; width: fit-content; border-radius: 50px;">
+            <div class="cyber-border" style="padding: 1.5rem 3rem; margin: 0 auto; width: fit-content; border-radius: 50px; font-size: 1.2rem;">
                 AI认知诊断 × 游戏化学习 × 动态路径规划
+            </div>
+            <div style="margin-top: 4rem; display: flex; justify-content: center; gap: 2rem;">
+                <a href="#features" class="chat-btn" style="background: linear-gradient(45deg, var(--secondary), var(--primary));">
+                    探索功能
+                </a>
+                <a href="#resources" class="chat-btn" style="background: linear-gradient(45deg, var(--accent), var(--primary));">
+                    学习资源
+                </a>
             </div>
         </div>
     </section>
 
-    <div class="tech-grid">
-        <div class="tech-card">
-            <h3 style="color: var(--secondary);">⚡ DINA认知引擎</h3>
-            <p>实时知识状态追踪系统</p>
-            <div class="viz-placeholder" style="height: 200px; margin: 1rem 0;"></div>
+    <div class="tech-grid" id="features">
+        <div class="tech-card animate-on-scroll">
+            <h3 style="color: var(--secondary); font-size: 1.8rem; margin-bottom: 1.5rem;">⚡ DINA认知引擎</h3>
+            <p style="margin-bottom: 2rem;">基于深度学习的实时知识状态追踪系统，精准分析学生的知识掌握情况和认知能力</p>
+            
+            <!-- 新增认知引擎图表 -->
+            <div class="cognitive-chart">
+                <div class="chart-bar" style="--height: 60%;">
+                    <div class="chart-label">数学</div>
+                    <div class="chart-value">60%</div>
+                </div>
+                <div class="chart-bar" style="--height: 85%;">
+                    <div class="chart-label">英语</div>
+                    <div class="chart-value">85%</div>
+                </div>
+                <div class="chart-bar" style="--height: 45%;">
+                    <div class="chart-label">语文</div>
+                    <div class="chart-value">45%</div>
+                </div>
+                <div class="chart-bar" style="--height: 70%;">
+                    <div class="chart-label">物理</div>
+                    <div class="chart-value">70%</div>
+                </div>
+                <div class="chart-bar" style="--height: 55%;">
+                    <div class="chart-label">政治</div>
+                    <div class="chart-value">55%</div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 3rem;">
+                <h4 style="color: var(--secondary); margin-bottom: 1rem; font-size: 1.3rem;">个性化学习建议</h4>
+                <div class="knowledge-card">
+                    <div class="card-header">
+                        <div class="card-title">空间几何基础</div>
+                        <div class="card-badge">推荐加强</div>
+                    </div>
+                    <p>根据你的认知图谱分析，空间几何是你的薄弱环节，建议加强相关练习</p>
+                    <div class="progress-indicator">
+                        <div class="progress-bar" style="--width: 45%"></div>
+                    </div>
+                </div>
+                
+                <div class="knowledge-card">
+                    <div class="card-header">
+                        <div class="card-title">逻辑推理能力</div>
+                        <div class="card-badge">优势领域</div>
+                    </div>
+                    <p>你的逻辑推理能力表现出色，可以尝试更具挑战性的问题</p>
+                    <div class="progress-indicator">
+                        <div class="progress-bar" style="--width: 85%"></div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="tech-card">
-            <h3 style="color: var(--secondary);">🧠 三模AI系统</h3>
+        
+        <div class="tech-card animate-on-scroll">
+            <h3 style="color: var(--secondary); font-size: 1.8rem; margin-bottom: 1.5rem;">🧠 三模AI系统</h3>
+            <p style="margin-bottom: 2rem;">融合强化学习、监督学习和无监督学习，全方位支持学习过程的智能系统</p>
+            
+            <div class="viz-placeholder" style="height: 250px; margin: 1rem 0;">
+                <div style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem; color: var(--secondary);">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <p style="margin-bottom: 1rem;">实时分析学习数据</p>
+                    <div class="progress-indicator">
+                        <div class="progress-bar" style="--width: 90%"></div>
+                    </div>
+                    <p style="font-size: 0.9rem; color: rgba(255,255,255,0.7);">处理速度: 0.3秒/次分析</p>
+                </div>
+            </div>
+            
             <ul style="list-style: none; padding-left: 0;">
-                <li style="padding: 0.8rem; background: rgba(255,255,255,0.05); margin: 0.5rem 0; border-radius: 8px;">► 强化学习路径规划</li>
-                <li style="padding: 0.8rem; background: rgba(255,255,255,0.05); margin: 0.5rem 0; border-radius: 8px;">► 监督学习预测模型</li>
-                <li style="padding: 0.8rem; background: rgba(255,255,255,0.05); margin: 0.5rem 0; border-radius: 8px;">► 无监督学习行为分析</li>
+                <li style="padding: 1rem; background: rgba(255,255,255,0.05); margin: 0.8rem 0; border-radius: 8px; display: flex; align-items: center;">
+                    <div style="font-size: 1.5rem; color: var(--secondary); margin-right: 1rem;">
+                        <i class="fa-solid fa-gamepad"></i>
+                    </div>
+                    <div>
+                        <h4>强化学习路径规划</h4>
+                        <p style="font-size: 0.9rem; color: rgba(255,255,255,0.7);">根据学习效果动态调整学习路径</p>
+                    </div>
+                </li>
+                <li style="padding: 1rem; background: rgba(255,255,255,0.05); margin: 0.8rem 0; border-radius: 8px; display: flex; align-items: center;">
+                    <div style="font-size: 1.5rem; color: var(--secondary); margin-right: 1rem;">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <div>
+                        <h4>监督学习预测模型</h4>
+                        <p style="font-size: 0.9rem; color: rgba(255,255,255,0.7);">预测学习难点和可能遇到的问题</p>
+                    </div>
+                </li>
+                <li style="padding: 1rem; background: rgba(255,255,255,0.05); margin: 0.8rem 0; border-radius: 8px; display: flex; align-items: center;">
+                    <div style="font-size: 1.5rem; color: var(--secondary); margin-right: 1rem;">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <div>
+                        <h4>无监督学习行为分析</h4>
+                        <p style="font-size: 0.9rem; color: rgba(255,255,255,0.7);">发现学习行为模式和潜在问题</p>
+                    </div>
+                </li>
             </ul>
         </div>
-        <div class="tech-card">
-            <h3 style="color: var(--secondary);">🔮 NLP智能生成</h3>
-            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                <span class="cyber-border" style="padding: 0.8rem 1.2rem; border-radius: 20px;">智能习题生成</span>
-                <span class="cyber-border" style="padding: 0.8rem 1.2rem; border-radius: 20px;">动态教案生成</span>
-                <span class="cyber-border" style="padding: 0.8rem 1.2rem; border-radius: 20px;">AI精准批改</span>
+        
+        <div class="tech-card animate-on-scroll">
+            <h3 style="color: var(--secondary); font-size: 1.8rem; margin-bottom: 1.5rem;">🔮 NLP智能生成</h3>
+            <p style="margin-bottom: 2rem;">基于大语言模型的智能内容生成系统，为个性化学习提供全方位支持</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2rem 0;">
+                <div class="cyber-border" style="padding: 1.5rem; border-radius: 15px; text-align: center;">
+                    <div class="resource-icon">📝</div>
+                    <h4 style="color: var(--secondary); margin-bottom: 0.5rem;">智能习题生成</h4>
+                    <p>根据知识点掌握情况生成个性化练习题</p>
+                </div>
+                <div class="cyber-border" style="padding: 1.5rem; border-radius: 15px; text-align: center;">
+                    <div class="resource-icon">📖</div>
+                    <h4 style="color: var(--secondary); margin-bottom: 0.5rem;">动态教案生成</h4>
+                    <p>根据学习进度和风格定制专属学习方案</p>
+                </div>
+                <div class="cyber-border" style="padding: 1.5rem; border-radius: 15px; text-align: center;">
+                    <div class="resource-icon">✍️</div>
+                    <h4 style="color: var(--secondary); margin-bottom: 0.5rem;">AI精准批改</h4>
+                    <p>实时批改作业并提供详细解析和改进建议</p>
+                </div>
+                <div class="cyber-border" style="padding: 1.5rem; border-radius: 15px; text-align: center;">
+                    <div class="resource-icon">🎤</div>
+                    <h4 style="color: var(--secondary); margin-bottom: 0.5rem;">智能答疑</h4>
+                    <p>随时解答学习疑问，提供清晰易懂的解释</p>
+                </div>
+            </div>
+            
+            <div class="viz-placeholder" style="height: 150px; margin: 1rem 0;">
+                <div style="padding: 1rem; text-align: center;">
+                    <p style="margin-bottom: 1rem;"></p>
+                    <div style="display: flex; justify-content: center; gap: 2rem;">
+                        <div>
+                            <div style="font-size: 2rem; color: var(--secondary);">128</div>
+                            <div style="font-size: 0.9rem; color: rgba(255,255,255,0.7);">智能习题</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 2rem; color: var(--secondary);">42</div>
+                            <div style="font-size: 0.9rem; color: rgba(255,255,255,0.7);">学习方案</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 2rem; color: var(--secondary);">76</div>
+                            <div style="font-size: 0.9rem; color: rgba(255,255,255,0.7);">作业批改</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <section class="game-section">
+    <section class="game-section animate-on-scroll">
         <div style="width: 100%; max-width: 1200px; margin: 0 auto;">
             <h2 style="font-size: 2.5rem; margin-bottom: 3rem; text-align: center;">游戏化学习系统</h2>
+            <p style="text-align: center; max-width: 800px; margin: 0 auto 4rem; color: rgba(255,255,255,0.8);">通过成就系统、竞争模式和个性化激励，让学习成为一种乐趣</p>
+            
             <div style="display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
                 <div class="tech-card">
-                    <h4>🎮 学习成就系统</h4>
-                    <div style="display: flex; gap: 1rem; margin-top: 1rem; justify-content: center;">
-                        <div class="achievement-badge">🏆 逻辑大师</div>
-                        <div class="achievement-badge">🧪 化学达人</div>
+                    <h4 style="color: var(--secondary); font-size: 1.5rem; margin-bottom: 1.5rem;">🎮 学习成就系统</h4>
+                    <p style="margin-bottom: 2rem;">通过完成学习任务获得成就徽章，记录学习成长历程</p>
+                    
+                    <div style="display: flex; justify-content: center; gap: 2rem; margin-top: 2rem;">
+                        <div class="achievement-badge">
+                            <div class="node-icon">🏆</div>
+                            <div>逻辑大师</div>
+                        </div>
+                        <div class="achievement-badge" style="background: linear-gradient(45deg, #48D1CC, #6C5CE7);">
+                            <div class="node-icon">🧪</div>
+                            <div>化学达人</div>
+                        </div>
+                        <div class="achievement-badge" style="background: linear-gradient(45deg, #FF6B6B, #6C5CE7); opacity: 0.6;">
+                            <div class="node-icon">🚀</div>
+                            <div>待解锁</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 2rem;">
+                        <h4 style="color: var(--secondary); margin-bottom: 1rem;">成就进度</h4>
+                        <div class="progress-indicator">
+                            <div class="progress-bar" style="--width: 65%"></div>
+                        </div>
+                        <p style="text-align: right; font-size: 0.9rem; color: rgba(255,255,255,0.7);">已解锁 12/18 成就</p>
                     </div>
                 </div>
+                
                 <div class="tech-card">
-                    <h4>🌟 个性化激励</h4>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-top: 1rem;">
-                        <div style="padding:1.5rem; text-align:center;" class="cyber-border">
-                            🥇 竞争模式
+                    <h4 style="color: var(--secondary); font-size: 1.5rem; margin-bottom: 1.5rem;">🌟 个性化激励</h4>
+                    <p style="margin-bottom: 2rem;">根据学习风格和偏好，提供多样化的激励机制</p>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2rem;">
+                        <div class="cyber-border" style="padding: 1.5rem; border-radius: 15px; text-align: center; min-height: 150px; display: flex; flex-direction: column; justify-content: center;">
+                            <div class="resource-icon">🥇</div>
+                            <h4 style="color: var(--secondary); margin-bottom: 0.5rem;">竞争模式</h4>
+                            <p>与同学比拼学习进度，激发学习动力</p>
                         </div>
-                        <div style="padding:1.5rem; text-align:center;" class="cyber-border">
-                            🧭 探索模式
+                        <div class="cyber-border" style="padding: 1.5rem; border-radius: 15px; text-align: center; min-height: 150px; display: flex; flex-direction: column; justify-content: center;">
+                            <div class="resource-icon">🧭</div>
+                            <h4 style="color: var(--secondary); margin-bottom: 0.5rem;">探索模式</h4>
+                            <p>自主探索知识领域，发现学习乐趣</p>
+                        </div>
+                        <div class="cyber-border" style="padding: 1.5rem; border-radius: 15px; text-align: center; min-height: 150px; display: flex; flex-direction: column; justify-content: center;">
+                            <div class="resource-icon">📈</div>
+                            <h4 style="color: var(--secondary); margin-bottom: 0.5rem;">成长记录</h4>
+                            <p>可视化展示学习进步，增强学习信心</p>
+                        </div>
+                        <div class="cyber-border" style="padding: 1.5rem; border-radius: 15px; text-align: center; min-height: 150px; display: flex; flex-direction: column; justify-content: center;">
+                            <div class="resource-icon">🎁</div>
+                            <h4 style="color: var(--secondary); margin-bottom: 0.5rem;">奖励系统</h4>
+                            <p>完成任务获得虚拟奖励，兑换学习资源</p>
                         </div>
                     </div>
                 </div>
@@ -250,13 +672,186 @@
         </div>
     </section>
 
-    <section style="padding: 4rem 5%; max-width: 1400px; margin: 0 auto;">
-        <h2 style="text-align: center; margin-bottom: 2rem;">学习路径动态规划</h2>
-        <div class="viz-placeholder"></div>
+    <!-- 学习资源部分 -->
+    <section id="resources" class="animate-on-scroll">
+        <div style="padding: 4rem 5%; max-width: 1400px; margin: 0 auto;">
+            <h2 style="text-align: center; margin-bottom: 3rem; font-size: 2.5rem;">精选中小学学习资源</h2>
+            <p style="text-align: center; max-width: 800px; margin: 0 auto 4rem; color: rgba(255,255,255,0.8);">整合优质教育资源，打造一站式学习平台</p>
+            
+            <div class="tech-grid">
+                <div class="resource-card">
+                    <div class="resource-icon"><i class="fa-solid fa-book-open"></i></div>
+                    <h3 style="color: var(--secondary);">国家中小学智慧教育平台</h3>
+                    <p>教育部推出的综合性教育平台，提供各学科优质课程资源和学习指导。</p>
+                    <a href="https://www.zxx.edu.cn" target="_blank" class="resource-link">访问平台</a>
+                </div>
+                
+                <div class="resource-card">
+                    <div class="resource-icon"><i class="fa-solid fa-rocket"></i></div>
+                    <h3 style="color: var(--secondary);">网易有道词典</h3>
+                    <p>功能强大的词典工具，支持多语种翻译、单词学习和听力练习。</p>
+                    <a href="https://dict.youdao.com" target="_blank" class="resource-link">打开词典</a>
+                </div>
+                
+                <div class="resource-card">
+                    <div class="resource-icon"><i class="fa-solid fa-microscope"></i></div>
+                    <h3 style="color: var(--secondary);">中国大学MOOC</h3>
+                    <p>提供丰富的中小学兴趣课程，涵盖科学实验、编程入门等多种主题。</p>
+                    <a href="https://www.icourse163.org" target="_blank" class="resource-link">探索课程</a>
+                </div>
+                
+                <div class="resource-card">
+                    <div class="resource-icon"><i class="fa-solid fa-paint-brush"></i></div>
+                    <h3 style="color: var(--secondary);">哔哩哔哩学习区</h3>
+                    <p>拥有海量学习视频，包括动画教学、科普知识和考试备考内容。</p>
+                    <a href="https://www.bilibili.com/study" target="_blank" class="resource-link">进入学习区</a>
+                </div>
+                
+                <div class="resource-card">
+                    <div class="resource-icon"><i class="fa-solid fa-calculator"></i></div>
+                    <h3 style="color: var(--secondary);">猿题库</h3>
+                    <p>提供各学科练习题和模拟考试，支持拍照搜题和错题整理功能。</p>
+                    <a href="https://www.yuantiku.com" target="_blank" class="resource-link">开始练习</a>
+                </div>
+                
+                <div class="resource-card">
+                    <div class="resource-icon"><i class="fa-solid fa-globe"></i></div>
+                    <h3 style="color: var(--secondary);">中国数字科技馆</h3>
+                    <p>通过互动体验的方式，普及科学知识，激发学生探索科学的兴趣。</p>
+                    <a href="https://www.cdstm.cn" target="_blank" class="resource-link">探索科学</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="animate-on-scroll">
+        <div style="padding: 4rem 5%; max-width: 1400px; margin: 0 auto;">
+            <h2 style="text-align: center; margin-bottom: 2rem; font-size: 2.5rem;">学习路径动态规划</h2>
+            <p style="text-align: center; max-width: 800px; margin: 0 auto 4rem; color: rgba(255,255,255,0.8);">基于AI算法的个性化学习路径规划，让学习更高效、更有针对性</p>
+            
+            <!-- 路径规划可视化 -->
+            <div class="path-container">
+                <div class="path-node">
+                    <div class="node-icon">📚</div>
+                    <div>当前</div>
+                    <div>基础巩固</div>
+                </div>
+                
+                <div class="path-connector" style="width: 150px; left: 190px;"></div>
+                
+                <div class="path-node" style="left: 150px;">
+                    <div class="node-icon">🚀</div>
+                    <div>下一步</div>
+                    <div>能力提升</div>
+                </div>
+                
+                <div class="path-connector" style="width: 150px; left: 440px;"></div>
+                
+                <div class="path-node" style="left: 300px;">
+                    <div class="node-icon">🌐</div>
+                    <div>进阶</div>
+                    <div>综合应用</div>
+                </div>
+                
+                <div class="path-connector" style="width: 150px; left: 690px;"></div>
+                
+                <div class="path-node" style="left: 450px;">
+                    <div class="node-icon">🎯</div>
+                    <div>高阶</div>
+                    <div>创新实践</div>
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 2rem;">
+                <div class="tech-card">
+                    <h4 style="color: var(--secondary); font-size: 1.3rem; margin-bottom: 1rem;">📊 动态评估</h4>
+                    <p>基于实时学习数据，持续优化学习路径，确保每一步都有针对性。系统会根据你的学习进度和掌握情况，自动调整学习内容和难度。</p>
+                    
+                    <div class="viz-placeholder" style="height: 150px; margin-top: 1.5rem;">
+                        <div style="text-align: center; padding: 1rem;">
+                            <p style="margin-bottom: 1rem;">学习路径优化频率</p>
+                            <div class="progress-indicator">
+                                <div class="progress-bar" style="--width: 95%"></div>
+                            </div>
+                            <p style="font-size: 0.9rem; color: rgba(255,255,255,0.7);">每完成 3 个知识点自动优化一次</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tech-card">
+                    <h4 style="color: var(--secondary); font-size: 1.3rem; margin-bottom: 1rem;">⏱️ 智能进度</h4>
+                    <p>根据个人能力和时间安排，自动调整学习节奏，避免过度疲劳。系统会分析你的学习效率和注意力集中时间，制定最适合你的学习计划。</p>
+                    
+                    <div style="margin-top: 1.5rem;">
+                        <h5 style="color: var(--secondary); margin-bottom: 0.5rem;">推荐每日学习时间</h5>
+                        <div class="progress-indicator">
+                            <div class="progress-bar" style="--width: 70%"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: rgba(255,255,255,0.7);">
+                            <div>30分钟</div>
+                            <div>2小时10分钟</div>
+                            <div>4小时</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tech-card">
+                    <h4 style="color: var(--secondary); font-size: 1.3rem; margin-bottom: 1rem;">🔄 自适应调整</h4>
+                    <p>当学习效果不达标时，自动识别并提供补救方案和额外练习。系统会分析你的错题和薄弱环节，提供针对性的练习和辅导。</p>
+                    
+                    <div style="margin-top: 1.5rem;">
+                        <h5 style="color: var(--secondary); margin-bottom: 0.5rem;">最近学习调整</h5>
+                        <div class="knowledge-card">
+                            <div class="card-header">
+                                <div class="card-title">空间几何基础</div>
+                                <div class="card-badge">加强练习</div>
+                            </div>
+                            <p>已为你增加5个相关练习，建议在2天内完成</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
     <footer style="text-align: center; padding: 2rem; background: rgba(0,0,0,0.3); margin-top: 4rem;">
-        © 2025 智鳄在线 - 重新定义教育科技
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 1.5rem;">
+
+            </div>
+            <p>© 2025 智鳄在线 - 重新定义教育科技</p>
+            <p style="font-size: 0.9rem; color: rgba(255,255,255,0.7); margin-top: 0.5rem;"></p>
+        </div>
     </footer>
+
+    <script>
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('.nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // 滚动动画
+        function checkScroll() {
+            const elements = document.querySelectorAll('.animate-on-scroll');
+            
+            elements.forEach(element => {
+                const elementPosition = element.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.3;
+                
+                if (elementPosition < screenPosition) {
+                    element.classList.add('visible');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', checkScroll);
+        window.addEventListener('load', checkScroll);
+    </script>
 </body>
 </html>
+    
